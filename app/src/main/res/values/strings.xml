@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Mendle</string>
+    <string name="login_activity">Login Activity</string>
+    <string name="mendle">MENDLE</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="createAccount">Create Account</string>
+    <string name="already_have_an_account">Already Have An Account</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="your_name">Your Name</string>
+    <string name="save_changes">Save Changes</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_requests_page">Hello Requests Page</string>
+    <string name="hello_friends_page">Hello Friends Page</string>
+    <string name="hello_chats_page">Hello Chats Page</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="message_layout_text">Lorem ipsum how does the rest of this stuff go? What if I want it to span two rows?</string>
+    <string name="send_friend_request">Send Friend Request</string>
+    <string name="decline_friend_request">Decline Friend request</string>
+    <string name="all_users">All Users</string>
+</resources>

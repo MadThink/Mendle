@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "965853573652",
+    "firebase_url": "https://mendle-6a667.firebaseio.com",
+    "project_id": "mendle-6a667",
+    "storage_bucket": "mendle-6a667.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965853573652:android:e5ebd3b5f2383f6f",
+        "android_client_info": {
+          "package_name": "com.example.kayda.mendle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "965853573652-aq984epoo13fdo3kjbr7aq42tmvodmor.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kayda.mendle",
+            "certificate_hash": "625ab5dfc81957a112ed0a9bf47939ca307e3b39"
+          }
+        },
+        {
+          "client_id": "965853573652-llel5g77pchpsv92o8g8qd4h6gl39m0v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2tGa4pPSEB5p4oN9bIhvOF37XkCbvef8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "965853573652-llel5g77pchpsv92o8g8qd4h6gl39m0v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
