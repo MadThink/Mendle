@@ -1,4 +1,4 @@
-package com.example.kayda.mendle;
+package com.example.kayda.mendle.Areas.Chat.Activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,13 +13,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.kayda.mendle.Areas.Chat.Adapters.MessageAdapter;
+import com.example.kayda.mendle.Areas.Chat.Models.Message;
+import com.example.kayda.mendle.R;
+import com.example.kayda.mendle.Areas.Admin.Utility.UserUtility;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.example.kayda.mendle.R;
-import com.example.kayda.mendle.UserUtility;
 
 /**
  * Responsible for displaying a list of messages from Firebase, listening for new messages, and

@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.kayda.mendle;
+package com.example.kayda.mendle.Areas.Chat.Models;
 
+import com.example.kayda.mendle.Areas.Chat.ViewHolders.MessageViewHolder;
+import com.example.kayda.mendle.Areas.Chat.Activity.MessagingActivity;
 import com.google.firebase.database.DataSnapshot;
 
 import java.text.SimpleDateFormat;

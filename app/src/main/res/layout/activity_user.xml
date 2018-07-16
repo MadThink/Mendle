@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:backgroundTint="#fda15e"
-    tools:context="com.example.kayda.mendle.UserActivity">
+    tools:context="com.example.kayda.mendle.Areas.Admin.Activity.UserActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar2"

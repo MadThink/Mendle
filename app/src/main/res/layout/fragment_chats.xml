@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:backgroundTint="#fda15e"
-    tools:context="com.example.kayda.mendle.ChatsFragment">
+    tools:context="com.example.kayda.mendle.Areas.Chat.Fragments.ChatsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

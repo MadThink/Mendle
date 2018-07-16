@@ -1,6 +1,5 @@
-package com.example.kayda.mendle;
+package com.example.kayda.mendle.Areas.Admin.Activity;
 
-import android.*;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,21 +16,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.kayda.mendle.App_Start.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -66,9 +62,9 @@ public class UserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user);
+        setContentView(com.example.kayda.mendle.R.layout.activity_user);
 
-        Toolbar setupToolbar = findViewById(R.id.toolbar2);
+        Toolbar setupToolbar = findViewById(com.example.kayda.mendle.R.id.toolbar2);
         setSupportActionBar(setupToolbar);
         getSupportActionBar().setTitle("Account Setup");
 
@@ -87,10 +83,10 @@ public class UserActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
 
 
-        setupImage = findViewById(R.id.circle_image_view);
-        setupName = findViewById(R.id.edit_name);
-        setupBtn = findViewById(R.id.setup_button);
-        setupProgress = findViewById(R.id.progressBar2);
+        setupImage = findViewById(com.example.kayda.mendle.R.id.circle_image_view);
+        setupName = findViewById(com.example.kayda.mendle.R.id.edit_name);
+        setupBtn = findViewById(com.example.kayda.mendle.R.id.setup_button);
+        setupProgress = findViewById(com.example.kayda.mendle.R.id.progressBar2);
 
         setupProgress.setVisibility(View.VISIBLE);
         setupBtn.setEnabled(false);
@@ -160,7 +156,7 @@ public class UserActivity extends AppCompatActivity {
                         setupName.setText(name);
 
                         RequestOptions placeholderRequest = new RequestOptions();
-                        placeholderRequest.placeholder(R.drawable.ic_account_circle_black_24dp);
+                        placeholderRequest.placeholder(com.example.kayda.mendle.R.drawable.ic_account_circle_black_24dp);
 
                         Glide.with(UserActivity.this).setDefaultRequestOptions(placeholderRequest).load(image).into(setupImage);
 

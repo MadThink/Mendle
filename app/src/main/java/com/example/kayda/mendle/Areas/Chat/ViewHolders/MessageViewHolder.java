@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.kayda.mendle;
+package com.example.kayda.mendle.Areas.Chat.ViewHolders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.kayda.mendle.Areas.Chat.Models.Message;
 import com.example.kayda.mendle.R;
 
 public class MessageViewHolder extends RecyclerView.ViewHolder {

@@ -1,4 +1,4 @@
-package com.example.kayda.mendle;
+package com.example.kayda.mendle.App_Start;
 
         import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.firebase.auth.FirebaseAuth;
+        import com.example.kayda.mendle.Areas.Admin.Activity.UserActivity;
+        import com.example.kayda.mendle.Areas.Contacts.Activity.OtherUsersActivity;
+        import com.example.kayda.mendle.Areas.Login.Activity.LoginActivity;
+        import com.example.kayda.mendle.R;
+        import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {

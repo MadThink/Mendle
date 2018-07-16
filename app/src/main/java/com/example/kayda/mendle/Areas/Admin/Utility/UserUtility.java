@@ -1,4 +1,4 @@
-package com.example.kayda.mendle;
+package com.example.kayda.mendle.Areas.Admin.Utility;
 
 import android.content.Context;
 import android.content.SharedPreferences;

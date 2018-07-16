@@ -6,7 +6,7 @@
     android:id="@+id/activity_messaging"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.kayda.mendle.MessagingActivity">
+    tools:context="com.example.kayda.mendle.Areas.Chat.Activity.MessagingActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messages_list"

@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "965853573652-36jl864u4n3fhbvojf8b5sb7glomtcp2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kayda.mendle",
+            "certificate_hash": "4881e64a6bf5a07558720beb2b7140f51b0a0f20"
+          }
+        },
+        {
           "client_id": "965853573652-llel5g77pchpsv92o8g8qd4h6gl39m0v.apps.googleusercontent.com",
           "client_type": 3
         }

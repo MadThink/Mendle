@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fda15e"
-    tools:context="com.example.kayda.mendle.OtherUsersActivity">
+    tools:context="com.example.kayda.mendle.Areas.Contacts.Activity.OtherUsersActivity">
 
 
     <android.support.v7.widget.RecyclerView

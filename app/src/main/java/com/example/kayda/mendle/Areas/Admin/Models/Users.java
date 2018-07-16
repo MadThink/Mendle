@@ -1,4 +1,6 @@
-package com.example.kayda.mendle;
+package com.example.kayda.mendle.Areas.Admin.Models;
+
+import com.example.kayda.mendle.Areas.Admin.Auth.UserId;
 
 /**
  * Created by Kayda on 3/16/2018.

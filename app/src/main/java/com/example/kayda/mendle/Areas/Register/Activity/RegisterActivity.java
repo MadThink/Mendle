@@ -1,4 +1,4 @@
-package com.example.kayda.mendle;
+package com.example.kayda.mendle.Areas.Register.Activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -11,15 +11,16 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.kayda.mendle.Areas.Login.Activity.LoginActivity;
+import com.example.kayda.mendle.App_Start.MainActivity;
+import com.example.kayda.mendle.R;
+import com.example.kayda.mendle.Areas.Admin.Activity.UserActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
 

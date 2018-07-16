@@ -1,4 +1,4 @@
-package com.example.kayda.mendle;
+package com.example.kayda.mendle.Areas.Admin.Auth;
 
 import android.support.annotation.NonNull;
 

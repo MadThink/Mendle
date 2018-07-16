@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
 
-    tools:context="com.example.kayda.mendle.MainActivity">
+    tools:context="com.example.kayda.mendle.App_Start.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"

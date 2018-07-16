@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:backgroundTint="#fda15e"
-    tools:context="com.example.kayda.mendle.RequestsFragment">
+    tools:context="com.example.kayda.mendle.Utility.Fragments.RequestsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

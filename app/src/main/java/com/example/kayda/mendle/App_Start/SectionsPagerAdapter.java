@@ -1,8 +1,12 @@
-package com.example.kayda.mendle;
+package com.example.kayda.mendle.App_Start;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.example.kayda.mendle.Areas.Chat.Fragments.ChatsFragment;
+import com.example.kayda.mendle.Areas.Contacts.Fragments.FriendsFragment;
+import com.example.kayda.mendle.Utility.Fragments.RequestsFragment;
 
 /**
  * Created by Kayda on 2/21/2018.
