@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.kayda.mendle.Areas.Admin.Models.Users;
 import com.example.kayda.mendle.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,6 +25,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -33,17 +41,20 @@ public class ProfileActivity extends AppCompatActivity {
     private String current_state;
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrent_user;
-    private DatabaseReference mUsersDatabase;
+    private CollectionReference mUserCollection;
     private DatabaseReference mFriendsDatabase;
     private ProgressDialog mProgress;
+    private String user_id;
+
+    private static final String TAG = "ProfileActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        final String user_id=getIntent().getStringExtra("user_id");
+        user_id=getIntent().getStringExtra("user_id");
 
-        mUsersDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+        mUserCollection = FirebaseFirestore.getInstance().collection("Users");
         mFriendsDatabase= FirebaseDatabase.getInstance().getReference().child("FriendRequest");
         mCurrent_user=FirebaseAuth.getInstance().getCurrentUser();
 
@@ -51,6 +62,7 @@ public class ProfileActivity extends AppCompatActivity {
         mProfileName=(TextView)findViewById(R.id.profile_display_name);
         mSendRequestButton=(Button)findViewById(R.id.profile_send_rqs_btn);
 
+        //add logic to check if friends
         current_state="not friends";
 
         mProgress=new ProgressDialog(this);
@@ -59,28 +71,35 @@ public class ProfileActivity extends AppCompatActivity {
         mProgress.setCanceledOnTouchOutside(false);
         mProgress.show();
 
-        mUsersDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        try {
+            mUserCollection.document(user_id)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot document) {
 
-                String display_name=dataSnapshot.child("name").getValue().toString();
-                String display_image=dataSnapshot.child("image").getValue().toString();
+                            Users users = document.toObject(Users.class).withId(user_id);
 
-                mProfileName.setText(display_name);
+                            String display_name = users.getName();
+                            String display_image = users.getImage();
 
-                RequestOptions placeholderRequest = new RequestOptions();
-                placeholderRequest.placeholder(R.drawable.ic_account_circle_black_24dp);
+                            mProfileName.setText(display_name);
 
-                Glide.with(ProfileActivity.this).setDefaultRequestOptions(placeholderRequest).load(display_image).into(mProfileImage);
+                            RequestOptions placeholderRequest = new RequestOptions();
+                            placeholderRequest.placeholder(R.drawable.ic_account_circle_black_24dp);
 
-            }
+                            Glide.with(ProfileActivity.this)
+                                    .setDefaultRequestOptions(placeholderRequest)
+                                    .load(display_image)
+                                    .into(mProfileImage);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-
-            }
-        });
+                            mProgress.dismiss();
+                        }
+                    });
+        }
+        catch(Exception e){
+            Log.d(TAG, e.getMessage());
+        }
 
         mSendRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
