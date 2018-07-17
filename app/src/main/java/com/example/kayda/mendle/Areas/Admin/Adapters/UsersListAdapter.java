@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.ViewHolder>{
 
+    private static final String TAG = "UserListAdapter";
+
     public List<Users> usersList;
     public Context context;
     private FirebaseFirestore firebaseFirestore;
@@ -54,34 +57,38 @@ public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.View
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
    // holder.mNameText.setText(usersList.get(position).getName());
     final String userId=usersList.get(position).userId;
+    try {
+        firebaseFirestore.collection("Users").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    String name = task.getResult().getString("name");
+                    String image = task.getResult().getString("image");
 
-   firebaseFirestore.collection("Users").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-        @Override
-        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-           if(task.isSuccessful()) {
-               String name = task.getResult().getString("name");
-               String image = task.getResult().getString("image");
+                    holder.setUsersData(name, image);
 
-               holder.setUsersData(name,image);
+                    holder.mView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-               holder.mView.setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
+                            Intent intent = new Intent(viewParent.getContext(), ProfileActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                            intent.putExtra("user_id", userId);
 
-                       Intent intent=new Intent(viewParent.getContext(), ProfileActivity.class);
-                       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                       intent.putExtra("user_id", userId);
+                            viewParent.getContext().startActivity(intent);
+                            //viewParent.getContext().startActivity(new Intent(context, ProfileActivity.class));
+                        }
+                    });
 
-                       viewParent.getContext().startActivity(intent);
-                       //viewParent.getContext().startActivity(new Intent(context, ProfileActivity.class));
-                   }
-               });
-
-           }else{
-
-           }
+                } else {
+                    Log.d(TAG, "Retrieving document task was unsuccessful.");
+                }
+            }
+        });
+    }
+    catch(Exception e){
+        Log.d(TAG, e.getMessage());
         }
-    });
 
     holder.mView.setOnClickListener(new View.OnClickListener() {
         @Override
