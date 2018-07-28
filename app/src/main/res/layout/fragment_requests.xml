@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:backgroundTint="#fda15e"
+    android:orientation="vertical"
     tools:context=".Areas.Requests.Fragments.RequestsFragment">
 
     <android.support.v7.widget.RecyclerView

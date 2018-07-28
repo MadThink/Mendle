@@ -28,6 +28,7 @@ public class Request {
         result.put("UserRequestId", UserRequestId);
         result.put("UserRequestImage", UserRequestImage);
         result.put("UserRequestName", UserRequestName);
+        result.put("RequestStatus", RequestStatus);
 
         return result;
     }

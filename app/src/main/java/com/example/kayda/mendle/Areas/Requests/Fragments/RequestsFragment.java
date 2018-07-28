@@ -1,9 +1,7 @@
 package com.example.kayda.mendle.Areas.Requests.Fragments;
 
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.kayda.mendle.Areas.Requests.Adapters.RequestsListAdapter;
 import com.example.kayda.mendle.Areas.Requests.Models.Request;
@@ -40,6 +36,7 @@ public class RequestsFragment extends Fragment {
     private RequestsListAdapter mRequestsListAdapter;
     private List<Request> mRequestsList;
     private RecyclerView.LayoutManager mLayoutManager;
+    private Button acceptRequestButton;
 
     public RequestsFragment() {
         // Required empty public constructor
@@ -53,6 +50,8 @@ public class RequestsFragment extends Fragment {
 
         mCurrent_user = FirebaseAuth.getInstance().getCurrentUser();
         mUsersDatabase = FirebaseDatabase.getInstance().getReference();
+
+        acceptRequestButton = view.findViewById(R.id.accept_request_button);
 
         mLayoutManager = new LinearLayoutManager(container.getContext());
 
@@ -70,9 +69,16 @@ public class RequestsFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     Request request = postSnapshot.getValue(Request.class);
-                    if(request.RequestStatus == "received") {
-                        mRequestsList.add(request);
-                        mRequestsListAdapter.notifyDataSetChanged();
+                    if(request.RequestStatus.equals("received")) {
+                        Boolean set = true;
+                        for(Request r : mRequestsList){
+                            if(r.UserRequestId.equals(request.UserRequestId)){
+                                set = false;
+                            }
+                        }
+                        if(set)
+                            mRequestsList.add(request);
+                            mRequestsListAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -83,6 +89,9 @@ public class RequestsFragment extends Fragment {
         });
 
         return view;
+
+
     }
+
 
 }

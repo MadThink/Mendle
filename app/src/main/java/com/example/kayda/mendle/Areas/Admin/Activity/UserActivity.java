@@ -26,8 +26,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -92,7 +95,7 @@ public class UserActivity extends AppCompatActivity {
         setupBtn.setEnabled(false);
 
 
-       /* mDatabase.addValueEventListener(new ValueEventListener() {
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Toast.makeText(UserActivity.this, dataSnapshot.toString(), Toast.LENGTH_LONG).show();
@@ -130,52 +133,6 @@ public class UserActivity extends AppCompatActivity {
                 });
             }
         });
-    */
-
-
-
-
-
-
-
-
-
-       firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                if(task.isSuccessful()){
-
-                    if(task.getResult().exists()){
-
-                        String name = task.getResult().getString("name");
-                        String image = task.getResult().getString("image");
-
-                        mainImageURI = Uri.parse(image);
-
-                        setupName.setText(name);
-
-                        RequestOptions placeholderRequest = new RequestOptions();
-                        placeholderRequest.placeholder(com.example.kayda.mendle.R.drawable.ic_account_circle_black_24dp);
-
-                        Glide.with(UserActivity.this).setDefaultRequestOptions(placeholderRequest).load(image).into(setupImage);
-
-
-                    }
-
-                } else {
-
-                    String error = task.getException().getMessage();
-                    Toast.makeText(UserActivity.this, "(FIRESTORE Retrieve Error) : " + error, Toast.LENGTH_LONG).show();
-
-                }
-
-                setupProgress.setVisibility(View.INVISIBLE);
-                setupBtn.setEnabled(true);
-
-            }
-        });
-
 
      setupBtn.setOnClickListener(new View.OnClickListener() {
             @Override

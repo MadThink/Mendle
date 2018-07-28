@@ -37,6 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Button mSendRequestButton;
     private Button mDeclineRequestButton;
     private String current_state;
+    private Boolean request_sent;
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrent_user;
     private DatabaseReference mUsersDatabase;
@@ -52,7 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
         final String user_id=getIntent().getStringExtra("user_id");
 
         mUsersDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
-        mRequestsDatabase= FirebaseDatabase.getInstance().getReference().child("Requests");
+        mRequestsDatabase= FirebaseDatabase.getInstance().getReference();
         mCurrent_user=FirebaseAuth.getInstance().getCurrentUser();
 
         mProfileImageView=(ImageView) findViewById(R.id.profile_image);
@@ -61,6 +62,13 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         current_state="not friends";
+        request_sent = mUsersDatabase.child("Users")
+                .child(mCurrent_user.getUid())
+                .child("Requests")
+                .child(user_id)
+                .child("RequestStatus")
+                .toString()
+                .equals("sent");
 
         mProgress=new ProgressDialog(this);
         mProgress.setTitle("Loading User Data");
@@ -80,26 +88,26 @@ public class ProfileActivity extends AppCompatActivity {
                 RequestOptions placeholderRequest = new RequestOptions();
                 placeholderRequest.placeholder(R.drawable.ic_account_circle_black_24dp);
 
-                Glide.with(ProfileActivity.this).setDefaultRequestOptions(placeholderRequest).load(mProfileImage).into(mProfileImageView);
-
+                Glide.with(getApplicationContext()).setDefaultRequestOptions(placeholderRequest).load(mProfileImage).into(mProfileImageView);
+                mProgress.dismiss();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-
             }
         });
 
         mSendRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(current_state.equals("not friends")){
+                if(current_state.equals("not friends") && !request_sent){
 
                     Request newRequest = new Request(user_id, mProfileImage, mProfileName);
+                    newRequest.RequestStatus = "sent";
 
                     Map<String, Object> requestValues = newRequest.toMap();
                     Map<String, Object> childUpdates = new HashMap<>();
+
 
                     childUpdates.put("/Users/" + mCurrent_user.getUid() + "/" + "Requests" + "/" + user_id, requestValues);
                     childUpdates.put("/Requests/" + mCurrent_user.getUid() + "/" + user_id, requestValues);
@@ -108,8 +116,6 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-                                mRequestsDatabase.child("Users").child(mCurrent_user.getUid()).child("Requests").child(user_id)
-                                        .child("RequestStatus").setValue("sent");
                                 mRequestsDatabase.child("Users").child(user_id).child("Requests").child(mCurrent_user.getUid())
                                         .child("RequestStatus").setValue("received").addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
