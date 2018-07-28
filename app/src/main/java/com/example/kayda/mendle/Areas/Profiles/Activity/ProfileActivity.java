@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.kayda.mendle.Areas.Requests.Models.Request;
 import com.example.kayda.mendle.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,18 +25,25 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ProfileActivity extends AppCompatActivity {
 
-    private ImageView mProfileImage;
-    private TextView mProfileName;
+    private ImageView mProfileImageView;
+    private TextView mProfileNameView;
+    private String mProfileImage;
+    private String mProfileName;
     private Button mSendRequestButton;
     private Button mDeclineRequestButton;
     private String current_state;
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrent_user;
     private DatabaseReference mUsersDatabase;
-    private DatabaseReference mFriendsDatabase;
+    private DatabaseReference mRequestsDatabase;
     private ProgressDialog mProgress;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +52,13 @@ public class ProfileActivity extends AppCompatActivity {
         final String user_id=getIntent().getStringExtra("user_id");
 
         mUsersDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
-        mFriendsDatabase= FirebaseDatabase.getInstance().getReference().child("FriendRequest");
+        mRequestsDatabase= FirebaseDatabase.getInstance().getReference().child("Requests");
         mCurrent_user=FirebaseAuth.getInstance().getCurrentUser();
 
-        mProfileImage=(ImageView) findViewById(R.id.profile_image);
-        mProfileName=(TextView)findViewById(R.id.profile_display_name);
+        mProfileImageView=(ImageView) findViewById(R.id.profile_image);
+        mProfileNameView=(TextView)findViewById(R.id.profile_display_name);
         mSendRequestButton=(Button)findViewById(R.id.profile_send_rqs_btn);
+
 
         current_state="not friends";
 
@@ -63,15 +72,15 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                String display_name=dataSnapshot.child("name").getValue().toString();
-                String display_image=dataSnapshot.child("image").getValue().toString();
+                mProfileName=dataSnapshot.child("name").getValue().toString();
+                mProfileImage=dataSnapshot.child("image").getValue().toString();
 
-                mProfileName.setText(display_name);
+                mProfileNameView.setText(mProfileName);
 
                 RequestOptions placeholderRequest = new RequestOptions();
                 placeholderRequest.placeholder(R.drawable.ic_account_circle_black_24dp);
 
-                Glide.with(ProfileActivity.this).setDefaultRequestOptions(placeholderRequest).load(display_image).into(mProfileImage);
+                Glide.with(ProfileActivity.this).setDefaultRequestOptions(placeholderRequest).load(mProfileImage).into(mProfileImageView);
 
             }
 
@@ -87,24 +96,56 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(current_state.equals("not friends")){
 
-                    mFriendsDatabase.child(mCurrent_user.getUid()).child(user_id).child("request_type")
-                            .setValue("sent").addOnCompleteListener(new OnCompleteListener<Void>() {
+                    Request newRequest = new Request(user_id, mProfileImage, mProfileName);
+
+                    Map<String, Object> requestValues = newRequest.toMap();
+                    Map<String, Object> childUpdates = new HashMap<>();
+
+                    childUpdates.put("/Users/" + mCurrent_user.getUid() + "/" + "Requests" + "/" + user_id, requestValues);
+                    childUpdates.put("/Requests/" + mCurrent_user.getUid() + "/" + user_id, requestValues);
+
+                    mRequestsDatabase.updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-
-                                mFriendsDatabase.child(user_id).child(mCurrent_user.getUid()).child("request_type")
-                                        .setValue("recieved").addOnSuccessListener(new OnSuccessListener<Void>() {
+                                mRequestsDatabase.child("Users").child(mCurrent_user.getUid()).child("Requests").child(user_id)
+                                        .child("RequestStatus").setValue("sent");
+                                mRequestsDatabase.child("Users").child(user_id).child("Requests").child(mCurrent_user.getUid())
+                                        .child("RequestStatus").setValue("received").addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Toast.makeText(ProfileActivity.this,"Friend Request Sent",Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ProfileActivity.this, "Friend Request Sent!", Toast.LENGTH_SHORT).show();
                                     }
                                 });
-                            }else{
-                                Toast.makeText(ProfileActivity.this,"Failed Sending Request",Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                mRequestsDatabase.child("Users").child(mCurrent_user.getUid()).child("Requests").child(user_id)
+                                        .child("RequestStatus").setValue("failed");
+                                Toast.makeText(ProfileActivity.this, "Sorry. Your request failed... :(", Toast.LENGTH_SHORT);
                             }
                         }
                     });
+
+
+//                    mRequestsDatabase.child(mCurrent_user.getUid()).child("Requests").child(user_id).child("requestStatus")
+//                            .setValue("sent").addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            if(task.isSuccessful()){
+//
+//                                mRequestsDatabase.child(user_id).child(mCurrent_user.getUid()).child("requestStatus")
+//                                        .setValue("recieved").addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void aVoid) {
+//                                        Toast.makeText(ProfileActivity.this,"Friend Request Sent",Toast.LENGTH_SHORT).show();
+//                                    }
+//                                });
+//                            }else{
+//                                Toast.makeText(ProfileActivity.this,"Something went wrong... :(",Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+
                 }
             }
         });
