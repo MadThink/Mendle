@@ -131,27 +131,6 @@ public class ProfileActivity extends AppCompatActivity {
                             }
                         }
                     });
-
-
-//                    mRequestsDatabase.child(mCurrent_user.getUid()).child("Requests").child(user_id).child("requestStatus")
-//                            .setValue("sent").addOnCompleteListener(new OnCompleteListener<Void>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<Void> task) {
-//                            if(task.isSuccessful()){
-//
-//                                mRequestsDatabase.child(user_id).child(mCurrent_user.getUid()).child("requestStatus")
-//                                        .setValue("recieved").addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                    @Override
-//                                    public void onSuccess(Void aVoid) {
-//                                        Toast.makeText(ProfileActivity.this,"Friend Request Sent",Toast.LENGTH_SHORT).show();
-//                                    }
-//                                });
-//                            }else{
-//                                Toast.makeText(ProfileActivity.this,"Something went wrong... :(",Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-
                 }
             }
         });
