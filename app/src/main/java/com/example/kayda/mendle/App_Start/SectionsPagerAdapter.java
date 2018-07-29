@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.kayda.mendle.Areas.Chat.Fragments.ChatsFragment;
 import com.example.kayda.mendle.Areas.Contacts.Fragments.FriendsFragment;
-import com.example.kayda.mendle.Utility.Fragments.RequestsFragment;
+import com.example.kayda.mendle.Areas.Requests.Fragments.RequestsFragment;
 
 /**
  * Created by Kayda on 2/21/2018.
@@ -49,7 +49,7 @@ class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         switch(position){
             case 0:
-                return "Requests";
+                return "Request";
             case 1:
                 return "Chats";
             case 2:

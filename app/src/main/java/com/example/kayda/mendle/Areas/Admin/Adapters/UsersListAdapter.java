@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,11 @@ import com.example.kayda.mendle.Areas.Profiles.Activity.ProfileActivity;
 import com.example.kayda.mendle.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -31,11 +35,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.ViewHolder>{
 
-    private static final String TAG = "UserListAdapter";
-
     public List<Users> usersList;
     public Context context;
-    private FirebaseFirestore firebaseFirestore;
+    private DatabaseReference mUsersDatabase;
     private ViewGroup viewParent;
 
     public UsersListAdapter(Context context, List<Users>usersList){
@@ -48,7 +50,7 @@ public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.View
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.users_single_layout,parent,false);
-        firebaseFirestore=FirebaseFirestore.getInstance();
+        mUsersDatabase = FirebaseDatabase.getInstance().getReference();
         viewParent=parent;
         return  new ViewHolder(view);
     }
@@ -57,45 +59,34 @@ public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.View
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
    // holder.mNameText.setText(usersList.get(position).getName());
     final String userId=usersList.get(position).userId;
-    try {
-        firebaseFirestore.collection("Users").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    String name = task.getResult().getString("name");
-                    String image = task.getResult().getString("image");
 
-                    holder.setUsersData(name, image);
+       mUsersDatabase.child("Users").child(userId).addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+               Users user = dataSnapshot.getValue(Users.class);
+               String name = user.name;
+               String image = user.image;
 
-                    holder.mView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+               holder.setUsersData(name, image);
 
-                            Intent intent = new Intent(viewParent.getContext(), ProfileActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                            intent.putExtra("user_id", userId);
+               holder.mView.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+                       Intent intent = new Intent(viewParent.getContext(), ProfileActivity.class);
+                       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                       intent.putExtra("user_id", userId);
 
-                            viewParent.getContext().startActivity(intent);
-                            //viewParent.getContext().startActivity(new Intent(context, ProfileActivity.class));
-                        }
-                    });
+                       viewParent.getContext().startActivity(intent);
+                       //viewParent.getContext().startActivity(new Intent(context, ProfileActivity.class));
+                   }
+               });
+           }
 
-                } else {
-                    Log.d(TAG, "Retrieving document task was unsuccessful.");
-                }
-            }
-        });
-    }
-    catch(Exception e){
-        Log.d(TAG, e.getMessage());
-        }
-
-    holder.mView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(context,"User ID is: "+userId,Toast.LENGTH_SHORT).show();
-        }
-    });
+           @Override
+           public void onCancelled(DatabaseError databaseError) {
+               
+           }
+       });
     }
 
     @Override

@@ -21,4 +21,8 @@
     <string name="send_friend_request">Send Friend Request</string>
     <string name="decline_friend_request">Decline Friend request</string>
     <string name="all_users">All Users</string>
+    <string name="accept_request">Accept Request</string>
+    <string name="john_snow">John Snow</string>
+    <string name="sent_a_request">Sent a request!</string>
+    <string name="todo">TODO</string>
 </resources>

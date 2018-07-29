@@ -12,6 +12,13 @@ import android.widget.Button;
 import com.example.kayda.mendle.R;
 import com.example.kayda.mendle.Areas.Admin.Models.Users;
 import com.example.kayda.mendle.Areas.Admin.Adapters.UsersListAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,28 +34,20 @@ public class OtherUsersActivity extends AppCompatActivity {
     private Toolbar mToolbar;
 
     private RecyclerView mRecyclerView;
-    private FirebaseFirestore mFirestore;
+    private DatabaseReference mUsersDatabase;
     private static final String TAG="FireLog";
     private UsersListAdapter usersListAdapter;
     private List<Users> usersList;
-    private Button buttonProfile;
+    private FirebaseUser mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_users);
 
-       // mToolbar=(Toolbar)findViewById(R.id.users_appBar);
-        //getSupportActionBar().setTitle(R.string.all_users);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-       // setSupportActionBar(mToolbar);
+        mUsersDatabase = FirebaseDatabase.getInstance().getReference();
 
-
-        mFirestore = FirebaseFirestore.getInstance();
-        //buttonProfile=(Button) findViewById(R.id.open_profile);
-
-        //ActionBar actionBar = getActionBar();
-        //actionBar.setDisplayHomeAsUpEnabled(true);
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         usersList=new ArrayList<>();
         usersListAdapter=new UsersListAdapter(getApplicationContext(),usersList);
@@ -58,24 +57,29 @@ public class OtherUsersActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(usersListAdapter);
 
-        mFirestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        mUsersDatabase.child("Users").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                if(e!=null)
-                {
-                    Log.d(TAG,"Error:"+e.getMessage());
-                }
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot data : dataSnapshot.getChildren()){
+                    Users user = data.getValue(Users.class);
+                    user.userId = data.getKey();
+                    Boolean set = true;
 
-                for(DocumentChange doc:documentSnapshots.getDocumentChanges()){
-
-                    if(doc.getType()==DocumentChange.Type.ADDED){
-                        String userId=doc.getDocument().getId();
-                        Users users =doc.getDocument().toObject(Users.class).withId(userId);
-                        usersList.add(users);
-                        usersListAdapter.notifyDataSetChanged();
+                    for(Users u : usersList){
+                        if(u.userId.equals(user.userId)){
+                            set = false;
+                        }
                     }
-
+                        if(set && !user.userId.equals(mCurrentUser.getUid())) {
+                            usersList.add(user);
+                            usersListAdapter.notifyDataSetChanged();
+                        }
                 }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
